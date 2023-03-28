@@ -11,62 +11,66 @@ authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4'
 -->
 
 # API Node.js com Serverless Framework em ambiente AWS
-
-Este repositório contém o código fonte do Live Coding da DIO no dia 29/07/2021. Neste projeto vamos criar uma infraestrutra em nuvem AWS com API Gateway, DynamoDB, AWS Lambda e AWS CloudFormation utilizando o framework Serverless para o desenvolvimento baseada em Infraestrutura as a Code.
+Este repositório contém o código fonte do Live Coding da DIO no dia 29/07/2021. Nesse projeto vamos criar uma infraestrutra em nuvem AWS com API Gateway, DynamoDB, AWS Lambda e AWS CloudFormation utilizando o framework Serverless para o desenvolvimento baseada em Infraestrutura as a Code.
 
 ## Etapas
+Pré-requisitos: 
+  - Possuir uma conta na AWS e instalar Node.js na máquina.
+  - Instalar o [AWS CLI](https://docs.aws.amazon.com/pt_br/cli/latest/userguide/cli-chap-welcome.html).
 
-Pré requisitos: 
- - possuir uma conta na AWS e instalar Node.js na máquina.
- - Instalar o AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html
+## Configuração Inicial
+### Credenciais AWS
+  - Criar usuário: AWS Management Console -> IAM Dashboard -> Create New User -> <nome do usuário> -> Permissions "Administrator Access" -> Programmatic Access -> Download Keys.
+  - No terminal: `$ aws configure` -> colar as credenciais geradas anteriormente.
 
-### Setup Inicial
-
-#### Credenciais AWS
-
-- Criar usuário: AWS Management Console -> IAM Dashboard -> Create New User -> <nome do usuário> -> Permissions "Administrator Access" -> Programmatic Access -> Dowload Keys
-- No terminal: ```$ aws configure``` -> colar as credenciais geradas anteriormente
-- 
-#### Configurar o framework Serverless
-```$ npm i -g serverless```
-
-### Desenvolvimento do projeto
- 
+### Configurar o Framework Serverless
+```bash
+$ npm i -g serverless
 ```
+
+## Desenvolvimento do Projeto
+```bash
 $ serverless
 Login/Register: No
 Update: No
 Type: Node.js REST API
 Name: dio-live
 ```
-```
+
+```bash
 $ cd dio-live
 $ code .
-``` 
-- No arquivo ```serverless.yml``` adicionar a região ```region: us-east-1``` dentro do escopo de ```provider:```
-- Salvar e realizar o deploy ```$ serverless deploy -v```
-
-#### Estruturar o código
-
-- Criar o diretório "src" e mover o arquivo "handler.js" para dentro dele
-- Renomear o arquivo "handler.js" para "hello.js"
-- Atualizar o código 
 ```
+
+  - No arquivo `serverless.yml` adicionar a região `region: us-east-1` dentro do escopo de `provider`.
+  - Salvar e realizar o deploy `$ serverless deploy -v`.
+
+### Estruturar o código
+  - Criar o diretório `src` e mover o arquivo `handler.js` para dentro dele.
+  - Renomear o arquivo `handler.js` para `hello.js`.
+  - Atualizar o código.
+
+```bash
 const hello = async (event) => {
 /////
 module.exports = {
     handler:hello
 }
 ```
-- Atualizar o arquivo "serverless.yml "
-```
+
+  - Atualizar o arquivo `serverless.yml`.
+```bash
 handler: src/hello.handler
 ```
-```$ serverless deploy -v ```
 
-#### DynamoDB
-Atualizar o arquivo serverless.yml
+```bash
+$ serverless deploy -v
 ```
+
+### Amazon DynamoDB
+Atualizar o arquivo `serverless.yml`.
+
+```bash
 resources:
   Resources:
     ItemTable:
@@ -81,12 +85,13 @@ resources:
             - AttributeName: id
               KeyType: HASH
 ```
-#### Desenvolver funções lambda
 
-	- Pasta /src do repositório
- 	- Obter arn da tabela no DynamoDB AWS Console -> DynamoDB -> Overview -> Amazon Resource Name (ARN)
-	- Atualizar arquivo serverless.yml com o código a seguir, abaixo do ```region:```
-  ```
+### Desenvolver Funções AWS Lambda
+  - Pasta `/src` do repositório.
+  - Obter `arn` da tabela no DynamoDB AWS Console -> DynamoDB -> Overview -> Amazon Resource Name (ARN).
+  - Atualizar arquivo `serverless.yml` com o código a seguir, abaixo do `region`.
+
+  ```bash
 	iam:
       role:
           statements:
@@ -100,13 +105,18 @@ resources:
                 - arn:aws:dynamodb:us-east-1:167880115321:table/ItemTable
   ```
   
-   - Instalar dependências
+  - Instalar dependências.
+   ```bash
+   npm init
+   ```
 
-   ```npm init```
-   ```npm i uuid aws-sdk```
-   
-  - Atualizar lista de funções no arquivo serverless.yml
-  ```
+   ```bash
+   npm i uuid aws-sdk
+   ```
+
+  - Atualizar lista de funções no arquivo `serverless.yml`.
+
+  ```yaml
   functions:
   hello:
     handler: src/hello.handler
@@ -139,5 +149,3 @@ resources:
           path: /items/{id}
           method: put
   ```
-
-
