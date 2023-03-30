@@ -2,7 +2,6 @@
 Este repositório contém o código fonte do Live Coding da DIO no dia 17/11/2021. Nesse projeto foi desenvolvido uma API com autenticação via Amazon Cognito.
 
 ## Serviços AWS Utilizados
-
   - Amazon Cognito;
   - Amazon DynamoDB;
   - Amazon API Gateway;
